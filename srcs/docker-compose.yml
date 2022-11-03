@@ -1,29 +1,89 @@
-version: "3.9"
+version: "3.8"
 
 services:
+#nginx
   nginx:
     container_name: nginx
+    image: nginx:myVersion
     build:
       context: ./requirements/nginx
     networks:
       - inception
     ports:
-      - 8080:80
-    restart: unless-stopped
+      - "8080:80"
+      - "433:443"
+   # volumes:
+   #   - "~/Desktop/inception/website:/var/www/html"
+    restart: always
+    volumes:
+      - wpdata:/var/www/html
+    depends_on:
+      - wordpress
+
+#mariadb  
   mariadb:
+    image: mariadb:myVersion
     container_name: mariadb
     build:
       context: ./requirements/mariadb
+      args:
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_DATABASE
+        - MYSQL_USER
+        - MYSQL_PASSWORD
     networks:
       - inception
+    volumes:
+     - dbdata:/var/lib/mysql
+    ports:
+      - 3306
     restart: unless-stopped
+
+
+#wordpress
   wordpress:
     container_name: wordpress
+    image: wordpress:myVersion
     build:
       context: ./requirements/wordpress
+      args:
+        - MYSQL_DATABASE
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+        - MYSQL_HOST
+        - WP_ADMIN
+        - WP_ADMIN_PASSWORD
+        - WP_ADMIN_EMAIL
+        - WP_URL
+        - WP_SITE_TITLE
     networks:
       - inception
     restart: unless-stopped
+    depends_on:
+      - mariadb
+    volumes:
+      - wpdata:/var/www/html
+    ports:
+      - 9000
+      - 3306
+   
+      
+#networks and volume params 
 networks:
   inception:
     name: inception_network
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/$USER/data/DB
+  wpdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/$USER/data/WordPress

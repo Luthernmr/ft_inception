@@ -1,8 +1,23 @@
-FROM debian:buster
+FROM	debian:buster
 
-RUN apt update -y && apt upgrade -y
+ARG		MYSQL_ROOT_PASSWORD
+ARG		MYSQL_DATABASE
+ARG		MYSQL_USER
+ARG		MYSQL_PASSWORD
 
-RUN apt install mariadb-server -y
+RUN		apt-get update -y \
+&&		apt upgrade -y
 
-#RUN mysql_secure_installation
+RUN		apt-get install -y mariadb-server
 
+RUN		service mysql start \
+&&		mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;\
+		  ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';\
+		  GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';\
+		  FLUSH PRIVILEGES;"
+
+# PORTS
+EXPOSE	3306
+
+# START
+ENTRYPOINT	["mysqld"]
