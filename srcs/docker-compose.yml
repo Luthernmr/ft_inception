@@ -10,10 +10,8 @@ services:
     networks:
       - inception
     ports:
-      - "8080:80"
       - "433:443"
-   # volumes:
-   #   - "~/Desktop/inception/website:/var/www/html"
+      - 9000
     restart: always
     volumes:
       - wpdata:/var/www/html
@@ -37,6 +35,7 @@ services:
      - dbdata:/var/lib/mysql
     ports:
       - 3306
+    init: true
     restart: unless-stopped
 
 
@@ -46,16 +45,8 @@ services:
     image: wordpress:myVersion
     build:
       context: ./requirements/wordpress
-      args:
-        - MYSQL_DATABASE
-        - MYSQL_USER
-        - MYSQL_PASSWORD
-        - MYSQL_HOST
-        - WP_ADMIN
-        - WP_ADMIN_PASSWORD
-        - WP_ADMIN_EMAIL
-        - WP_URL
-        - WP_SITE_TITLE
+    env_file:
+      - .env
     networks:
       - inception
     restart: unless-stopped
