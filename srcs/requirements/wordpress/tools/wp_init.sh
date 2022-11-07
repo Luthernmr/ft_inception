@@ -11,7 +11,7 @@ then
 	sed -i		"s|username_here|$MYSQL_USER|" /var/www/html/wordpress/wp-config.php;
 	sed -i		"s|password_here|$MYSQL_PASSWORD|" /var/www/html/wordpress/wp-config.php;
 	sed -i		"s|localhost|$MYSQL_HOST|" /var/www/html/wordpress/wp-config.php;
-	sed -i		's|$DOMAIN_NAME|'$DOMAIN_NAME'|' /var/www/html/wordpress/wp-config.php;
+	sed -i		's|$WP_URL|'$WP_URL'|' /var/www/html/wordpress/wp-config.php;
 
 	wp core install	--allow-root \
 		--url=$WP_URL \

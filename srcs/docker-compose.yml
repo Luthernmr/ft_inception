@@ -10,7 +10,7 @@ services:
     networks:
       - inception
     ports:
-      - "433:443"
+      - "443:443"
       - 9000
     restart: always
     volumes:
