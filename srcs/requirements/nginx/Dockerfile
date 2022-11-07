@@ -12,8 +12,6 @@ RUN  openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
 
 
 COPY conf/nginx.conf /etc/nginx/conf.d/
-#RUN		ln -s /etc/nginx/sites-available/lnemor.42.fr.conf /etc/nginx/sites-enabled/lnemor.42.fr.conf
-
 
 EXPOSE 443 9000
 

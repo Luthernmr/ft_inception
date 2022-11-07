@@ -16,8 +16,6 @@ RUN		service mysql start \
 		  GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';\
 		  FLUSH PRIVILEGES;"
 
-# PORTS
 EXPOSE	3306
 
-# START
 ENTRYPOINT	["mysqld", "--bind-address=0.0.0.0"]
